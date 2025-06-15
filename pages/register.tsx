@@ -84,9 +84,7 @@ export default function Register() {
             <div>
               <h1 className='text-4xl font-bold text-white'>BPKAD</h1>
             </div>
-            <p className='text-base font-normal text-white'>
-              Sistem Informasi Monitoring Aset Kendaraan Dinas
-            </p>
+            <p className='text-base font-normal text-white'>Sistem Informasi Monitoring Aset Kendaraan Dinas</p>
             <p className='font-semibold text-white'>© BPKAD - {new Date().getFullYear()}</p>
           </div>
 

@@ -23,10 +23,7 @@ export default function Home() {
   // }
 
   return (
-    <FrontLayout
-      title='Home - BPKAD'
-      description="Sistem Informasi Monitoring Aset Kendaraan Dinas"
-    >
+    <FrontLayout title='Home - BPKAD' description='Sistem Informasi Monitoring Aset Kendaraan Dinas'>
       <div className='py-8' />
     </FrontLayout>
   );

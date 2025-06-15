@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { getSessionToken, supabase, writeLogs } from '@/libs/supabase';
 
 const schema = z.object({
-  nama: z.string().min(1, { message: 'Name required' }),
+  nama: z.string().min(1, { message: 'Nama tidak boleh kosong' }),
 });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
