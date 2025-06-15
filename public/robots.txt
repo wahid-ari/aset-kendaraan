@@ -1,0 +1,11 @@
+# Block all crawlers for /accounts
+# User-agent: *
+# Disallow: /accounts
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+Allow: /api/og/*
+
+# Sitemap
+Sitemap: https://aset-kendaraan.vercel.app/sitemap.xml
