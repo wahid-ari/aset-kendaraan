@@ -15,7 +15,7 @@ export default function Home() {
   //   return (
   //     <FrontLayout
   //       title='Home - BPKAD'
-  //       description="Sistem Informasi Aset Kendaraan Daerah"
+  //       description="Sistem Informasi Monitoring Aset Kendaraan Dinas"
   //     >
   //       <div className='flex h-[36rem] items-center justify-center text-base'>Failed to load</div>
   //     </FrontLayout>
@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <FrontLayout
       title='Home - BPKAD'
-      description="Sistem Informasi Aset Kendaraan Daerah"
+      description="Sistem Informasi Monitoring Aset Kendaraan Dinas"
     >
       <div className='py-8' />
     </FrontLayout>

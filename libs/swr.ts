@@ -69,6 +69,16 @@ export function useGenresData() {
   return { data, error, isLoading };
 }
 
+export function useInstansiData() {
+  const { data, error, isLoading } = useSWR(`${API_URL}/instansi`, fetcher, { refreshInterval: 1000 });
+  return { data, error, isLoading };
+}
+
+export function useInstansiDetailData(id: string) {
+  const { data, error, isLoading } = useSWR(`${API_URL}/instansi?id=${id}`, fetcher, { refreshInterval: 1000 });
+  return { data, error, isLoading };
+}
+
 export function useGenreData(id: string, slug?: boolean) {
   const { data, error, isLoading } = useSWR(
     slug ? `${API_URL}/genre?slug=${slug}` : `${API_URL}/genre?id=${id}`,

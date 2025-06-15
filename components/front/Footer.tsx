@@ -33,7 +33,7 @@ export default function Footer({ className, ...props }: { className?: string; [p
             </Link>
             {/* web logo  */}
             <p className='mt-4 pb-2 pr-4 text-[15px] text-neutral-700 dark:text-neutral-300'>
-              Sistem Informasi Aset Kendaraan Daerah
+              Sistem Informasi Monitoring Aset Kendaraan Dinas
             </p>
           </div>
           <div className='grid grid-cols-2 gap-8 min-[500px]:grid-cols-3 sm:gap-6 md:w-2/4'>

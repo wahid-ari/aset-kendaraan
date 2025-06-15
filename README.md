@@ -1,5 +1,15 @@
 ## Getting Started
 
+### Inspirasi
+
+https://www.bedroweb.com/2019/04/aplikasi-pengelolaan-kendaraan-dinas.html
+
+### Data Dinas
+
+folder : data/daftar-opd.xlsx
+
+## Getting Started
+
 First, run the development server:
 
 ```bash

@@ -40,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return;
       } else {
         const { data, error } = await supabase
-          .from('aset_admin')
+          .from('aset_user')
           .select(`*`)
           .eq('username', body.username)
           .limit(1)

@@ -42,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'GET':
       if (query.id) {
         const { data } = await supabase
-          .from('aset_admin')
+          .from('aset_user')
           .select(`id, name, username, type`)
           .eq('id', query.id)
           .order('id');
@@ -52,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       } else if (query.generate == 'true') {
         const admins_hashed = await hashPassword();
         const { data, error } = await supabase
-          .from('aset_admin')
+          .from('aset_user')
           .insert(admins_hashed)
           .select(`id, name, username, type`);
         if (error) {
@@ -64,7 +64,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return;
       } else if (query.clean == 'true') {
         // select current users id
-        const { data: selectUsers } = await supabase.from('aset_admin').select('id').order('id');
+        const { data: selectUsers } = await supabase.from('aset_user').select('id').order('id');
         // convert to array of id [1, 2, 3]
         let user_ids = selectUsers.map((item) => item.id);
         // delete current users
@@ -76,7 +76,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // seed users
         const admins_hashed = await hashPassword();
         const { data, error } = await supabase
-          .from('aset_admin')
+          .from('aset_user')
           .insert(admins_hashed)
           .select(`id, name, username, type`);
         if (error) {
@@ -87,7 +87,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // res.status(200).json(data);
         return;
       } else {
-        const { data } = await supabase.from('aset_admin').select(`id,name,username,type`).order('id');
+        const { data } = await supabase.from('aset_user').select(`id,name,username,type`).order('id');
         res.status(200).send(JSON.stringify(data, null, 2));
         // res.status(200).json(data);
       }

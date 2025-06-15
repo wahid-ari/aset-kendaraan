@@ -117,6 +117,10 @@ export default function Sidebar({ className, ...props }: { className?: string; [
             Genre
           </NavLink>
 
+          <NavLink href='/instansi' icon={<LayoutListIcon className='h-[18px] w-[18px]' />} className='mt-0.5'>
+            Instansi
+          </NavLink>
+
           <NavAccordion
             title='Activity'
             routeName='activity'
