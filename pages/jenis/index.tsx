@@ -5,7 +5,7 @@ import { PlusIcon } from 'lucide-react';
 import { mutate } from 'swr';
 import { useDebounce } from 'use-debounce';
 
-import { useGenresData } from '@/libs/swr';
+import { useJenisData } from '@/libs/swr';
 import useToast from '@/hooks/use-hot-toast';
 
 import Layout from '@/components/layout/Layout';
@@ -18,17 +18,17 @@ import Shimmer from '@/components/systems/Shimmer';
 import TableSimple from '@/components/systems/TableSimple';
 import Title from '@/components/systems/Title';
 
-// Genre.auth = true;
+// Jenis.auth = true;
 // This page secured through the middleware in root folder
-export default function Genre() {
-  const { data, error } = useGenresData();
+export default function Jenis() {
+  const { data, error } = useJenisData();
   const { updateToast, pushToast, dismissToast } = useToast();
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [name, setName] = useState('');
-  const [editItem, setEditItem] = useState({ id: null, name: '' });
-  const [deleteItem, setDeleteItem] = useState({ id: null, name: '' });
+  const [nama, setNama] = useState('');
+  const [editItem, setEditItem] = useState({ id: null, nama: '' });
+  const [deleteItem, setDeleteItem] = useState({ id: null, nama: '' });
   const [search, setSearch] = useState('');
   const [searchDebounce] = useDebounce(search, 300);
 
@@ -36,21 +36,21 @@ export default function Genre() {
     searchDebounce === ''
       ? data
       : data.filter((item: any) =>
-          item.name.toLowerCase().replace(/\s+/g, '').includes(searchDebounce.toLowerCase().replace(/\s+/g, '')),
+          item.nama.toLowerCase().replace(/\s+/g, '').includes(searchDebounce.toLowerCase().replace(/\s+/g, '')),
         );
 
   async function handleCreate() {
     const toastId = pushToast({
-      message: `Creating ${name}`,
+      message: `Menyimpan ${nama}`,
       isLoading: true,
     });
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/genre`, { name: name });
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/jenis`, { nama: nama });
       if (res.status == 200) {
         setOpenCreateDialog(false);
-        setName('');
+        setNama('');
         updateToast({ toastId, message: res?.data?.message, isError: false });
-        mutate(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/genre`);
+        mutate(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/jenis`);
       }
     } catch (error) {
       console.error(error);
@@ -61,10 +61,6 @@ export default function Genre() {
         errors.forEach((item: any) => {
           pushToast({ message: item?.message, isError: true });
         });
-        // only show one error
-        // errors.map((item: any) => {
-        //   updateToast({ toastId, message: item?.message, isError: true });
-        // })
       } else {
         updateToast({ toastId, message: error?.response?.data?.message, isError: true });
       }
@@ -73,16 +69,16 @@ export default function Genre() {
 
   async function handleEdit() {
     const toastId = pushToast({
-      message: 'Updating genre',
+      message: 'Memperbarui Jenis',
       isLoading: true,
     });
     try {
-      const res = await axios.put(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/genre`, editItem);
+      const res = await axios.put(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/jenis`, editItem);
       if (res.status == 201) {
         setOpenEditDialog(false);
-        setEditItem({ id: null, name: '' });
+        setEditItem({ id: null, nama: '' });
         updateToast({ toastId, message: res?.data?.message, isError: false });
-        mutate(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/genre`);
+        mutate(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/jenis`);
       }
     } catch (error) {
       console.error(error);
@@ -93,10 +89,6 @@ export default function Genre() {
         errors.forEach((item: any) => {
           pushToast({ message: item?.message, isError: true });
         });
-        // only show one error
-        // errors.map((item: any) => {
-        //   updateToast({ toastId, message: item?.message, isError: true });
-        // })
       } else {
         updateToast({ toastId, message: error?.response?.data?.message, isError: true });
       }
@@ -105,16 +97,16 @@ export default function Genre() {
 
   async function handleDelete() {
     const toastId = pushToast({
-      message: `Deleting ${deleteItem.name}`,
+      message: `Menghapus ${deleteItem.nama}`,
       isLoading: true,
     });
     try {
-      const res = await axios.delete(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/genre?id=${deleteItem.id}`);
+      const res = await axios.delete(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/jenis?id=${deleteItem.id}`);
       if (res.status == 200) {
         setOpenDeleteDialog(false);
-        setDeleteItem({ id: null, name: '' });
+        setDeleteItem({ id: null, nama: '' });
         updateToast({ toastId, message: res?.data?.message, isError: false });
-        mutate(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/genre`);
+        mutate(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/jenis`);
       }
     } catch (error) {
       console.error(error);
@@ -127,79 +119,84 @@ export default function Genre() {
     }
   }
 
-  function handleShowEditModal(id: any, name: any) {
-    setEditItem({ id: id, name: name });
+  function handleShowEditModal(id: any, nama: any) {
+    setEditItem({ id: id, nama: nama });
     setOpenEditDialog(true);
   }
 
-  function handleShowDeleteModal(id: any, name: any) {
-    setDeleteItem({ id: id, name: name });
+  function handleShowDeleteModal(id: any, nama: any) {
+    setDeleteItem({ id: id, nama: nama });
     setOpenDeleteDialog(true);
   }
 
   if (error) {
     return (
-      <Layout title='Genre - BPKAD'>
+      <Layout title='Jenis - BPKAD'>
         <div className='flex h-[36rem] items-center justify-center text-base'>Failed to load</div>
       </Layout>
     );
   }
 
   return (
-    <Layout title='Genre - BPKAD' prefetch={['/api/genre']} description='View and Manage Genre - BPKAD'>
+    <Layout title='Jenis - BPKAD' prefetch={['/api/jenis']} description='View and Manage Jenis - BPKAD'>
       <div className='mb-4 flex flex-wrap items-center justify-between gap-y-3'>
-        <Title>Genre</Title>
+        <Title>Jenis</Title>
         <Button.success onClick={() => setOpenCreateDialog(true)} className='flex items-center gap-2'>
           <PlusIcon className='h-4 w-4' />
-          Add New Genre
+          Tambah Jenis
         </Button.success>
       </div>
 
-      <Label>Search</Label>
-      <Input name='search' placeholder='Search' onChange={(e) => setSearch(e.target.value)} />
+      <Label>Cari Jenis</Label>
+      <Input name='search' placeholder='Mobil' onChange={(e) => setSearch(e.target.value)} />
 
       <Dialog
-        title='Create Genre'
+        title='Tambah Jenis'
         open={openCreateDialog}
         setOpen={setOpenCreateDialog}
-        onClose={() => setOpenCreateDialog(false)}
+        onClose={() => {
+          setOpenCreateDialog(false);
+          setNama('');
+        }}
         onConfirm={handleCreate}
-        confirmText='Save'
+        confirmText='Simpan'
+        cancelText='Batal'
       >
         <div className='mt-5'>
           <LabeledInput
-            label='Name'
+            label='Jenis'
             type='text'
-            name='name'
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder='Genre Name'
+            name='nama'
+            value={nama}
+            onChange={(e) => setNama(e.target.value)}
+            placeholder='Motor'
           />
         </div>
       </Dialog>
 
       <Dialog
-        title='Edit Genre'
+        title='Edit Jenis'
         open={openEditDialog}
         setOpen={setOpenEditDialog}
         onClose={() => setOpenEditDialog(false)}
         onConfirm={handleEdit}
-        confirmText='Update'
+        confirmText='Simpan'
+        cancelText='Batal'
         isEdit
       >
         <div className='mt-5'>
           <LabeledInput
-            label='Name'
+            label='Jenis'
             type='text'
-            name='name'
-            value={editItem.name}
-            onChange={(e) => setEditItem({ ...editItem, name: e.target.value })}
+            name='nama'
+            value={editItem.nama}
+            onChange={(e) => setEditItem({ ...editItem, nama: e.target.value })}
           />
         </div>
       </Dialog>
 
       <Dialog
-        title='Delete Genre'
+        title='Hapus Jenis'
         open={openDeleteDialog}
         isDanger
         setOpen={setOpenDeleteDialog}
@@ -207,7 +204,7 @@ export default function Genre() {
         onConfirm={handleDelete}
       >
         <div className='mt-5 text-center sm:text-left'>
-          Are you sure want to delete <span className='font-semibold'>{deleteItem.name}</span> ?
+          Yakin ingin menghapus nama "<span className='font-semibold'>{deleteItem.nama}</span>" ?
         </div>
       </Dialog>
 
@@ -216,8 +213,8 @@ export default function Genre() {
           head={
             <>
               <TableSimple.td shrink>No</TableSimple.td>
-              <TableSimple.td>Name</TableSimple.td>
-              <TableSimple.td shrink>Action</TableSimple.td>
+              <TableSimple.td>Jenis</TableSimple.td>
+              <TableSimple.td shrink>Aksi</TableSimple.td>
             </>
           }
         >
@@ -227,21 +224,21 @@ export default function Genre() {
                 <TableSimple.td shrink>{index + 1}</TableSimple.td>
                 <TableSimple.td>
                   <Link
-                    href={`genre/detail/${item.id}`}
+                    href={`jenis/detail/${item.id}`}
                     className='rounded text-sm font-medium transition-all duration-200 hover:text-sky-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500'
                   >
-                    {item.name}
+                    {item.nama}
                   </Link>
                 </TableSimple.td>
                 <TableSimple.td>
-                  <Button className='mr-2 !px-[6px] !py-[2px]' onClick={() => handleShowEditModal(item.id, item.name)}>
+                  <Button className='mr-2 !px-[6px] !py-[2px]' onClick={() => handleShowEditModal(item.id, item.nama)}>
                     Edit
                   </Button>
                   <Button.danger
                     className='!px-[6px] !py-[2px]'
-                    onClick={() => handleShowDeleteModal(item.id, item.name)}
+                    onClick={() => handleShowDeleteModal(item.id, item.nama)}
                   >
-                    Delete
+                    Hapus
                   </Button.danger>
                 </TableSimple.td>
               </TableSimple.tr>
@@ -253,8 +250,8 @@ export default function Genre() {
           head={
             <>
               <TableSimple.th shrink>No</TableSimple.th>
-              <TableSimple.th className='text-left'>Name</TableSimple.th>
-              <TableSimple.th className='w-32'>Action</TableSimple.th>
+              <TableSimple.th className='text-left'>Jenis</TableSimple.th>
+              <TableSimple.th className='w-32'>Aksi</TableSimple.th>
             </>
           }
         >

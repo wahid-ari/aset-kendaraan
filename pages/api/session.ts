@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   switch (method) {
     case 'GET':
-      const { data } = await supabase.from('book_sessions').select(`*, book_users (*)`).order('id');
+      const { data } = await supabase.from('aset_sessions').select(`*, book_users (*)`).order('id');
       res.status(200).json(data);
       break;
 
@@ -18,9 +18,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const sessionDelete = await getSessionToken(res, header, token);
       if (sessionDelete) {
         if (!query.id) {
-          const { data } = await supabase.from('book_sessions').select(`*`).order('id');
+          const { data } = await supabase.from('aset_sessions').select(`*`).order('id');
           for (const item of data) {
-            const { error } = await supabase.from('book_sessions').delete().eq('id', item.id);
+            const { error } = await supabase.from('aset_sessions').delete().eq('id', item.id);
             if (error) {
               res.status(422).json({ message: error.message });
               return;
@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           res.status(200).json({ message: 'Success delete all session' });
           return;
         } else {
-          const { error } = await supabase.from('book_sessions').delete().eq('id', query.id);
+          const { error } = await supabase.from('aset_sessions').delete().eq('id', query.id);
           if (error) {
             res.status(422).json({ message: error.message });
             return;

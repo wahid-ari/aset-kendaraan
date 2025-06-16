@@ -89,6 +89,16 @@ export function useTahunDetailData(id: string) {
   return { data, error, isLoading };
 }
 
+export function useJenisData() {
+  const { data, error, isLoading } = useSWR(`${API_URL}/jenis`, fetcher, { refreshInterval: 1000 });
+  return { data, error, isLoading };
+}
+
+export function useJenisDetailData(id: string) {
+  const { data, error, isLoading } = useSWR(`${API_URL}/jenis?id=${id}`, fetcher, { refreshInterval: 1000 });
+  return { data, error, isLoading };
+}
+
 export function useGenreData(id: string, slug?: boolean) {
   const { data, error, isLoading } = useSWR(
     slug ? `${API_URL}/genre?slug=${slug}` : `${API_URL}/genre?id=${id}`,

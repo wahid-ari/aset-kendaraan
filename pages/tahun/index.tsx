@@ -154,7 +154,10 @@ export default function Tahun() {
         title='Tambah Tahun'
         open={openCreateDialog}
         setOpen={setOpenCreateDialog}
-        onClose={() => setOpenCreateDialog(false)}
+        onClose={() => {
+          setOpenCreateDialog(false);
+          setTahun('');
+        }}
         onConfirm={handleCreate}
         confirmText='Simpan'
         cancelText='Batal'
@@ -162,7 +165,7 @@ export default function Tahun() {
         <div className='mt-5'>
           <LabeledInput
             label='Tahun'
-            type='text'
+            type='number'
             name='tahun'
             value={tahun}
             onChange={(e) => setTahun(e.target.value)}
@@ -185,7 +188,7 @@ export default function Tahun() {
         <div className='mt-5'>
           <LabeledInput
             label='Tahun'
-            type='text'
+            type='number'
             name='tahun'
             value={editItem.tahun}
             onChange={(e) => setEditItem({ ...editItem, tahun: e.target.value })}

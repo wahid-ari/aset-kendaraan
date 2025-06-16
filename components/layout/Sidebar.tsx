@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import {
   BookIcon,
+  Building2Icon,
+  CalendarIcon,
   ComputerIcon,
   ContainerIcon,
   ExternalLinkIcon,
@@ -19,6 +21,7 @@ import {
   SearchIcon,
   SettingsIcon,
   SheetIcon,
+  TruckIcon,
   UsersIcon,
   XIcon,
 } from 'lucide-react';
@@ -113,16 +116,20 @@ export default function Sidebar({ className, ...props }: { className?: string; [
             Book
           </NavLink>
 
-          <NavLink href='/genre' icon={<LayoutListIcon className='h-[18px] w-[18px]' />} className='mt-0.5'>
+          <NavLink href='/genre' icon={<TruckIcon className='h-[18px] w-[18px]' />} className='mt-0.5'>
             Genre
           </NavLink>
 
-          <NavLink href='/instansi' icon={<LayoutListIcon className='h-[18px] w-[18px]' />} className='mt-0.5'>
+          <NavLink href='/instansi' icon={<Building2Icon className='h-[18px] w-[18px]' />} className='mt-0.5'>
             Instansi
           </NavLink>
 
-          <NavLink href='/tahun' icon={<LayoutListIcon className='h-[18px] w-[18px]' />} className='mt-0.5'>
+          <NavLink href='/tahun' icon={<CalendarIcon className='h-[18px] w-[18px]' />} className='mt-0.5'>
             Tahun
+          </NavLink>
+
+          <NavLink href='/jenis' icon={<LayoutListIcon className='h-[18px] w-[18px]' />} className='mt-0.5'>
+            Jenis
           </NavLink>
 
           <NavAccordion
