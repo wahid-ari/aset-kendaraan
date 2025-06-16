@@ -79,6 +79,16 @@ export function useInstansiDetailData(id: string) {
   return { data, error, isLoading };
 }
 
+export function useTahunData() {
+  const { data, error, isLoading } = useSWR(`${API_URL}/tahun`, fetcher, { refreshInterval: 1000 });
+  return { data, error, isLoading };
+}
+
+export function useTahunDetailData(id: string) {
+  const { data, error, isLoading } = useSWR(`${API_URL}/tahun?id=${id}`, fetcher, { refreshInterval: 1000 });
+  return { data, error, isLoading };
+}
+
 export function useGenreData(id: string, slug?: boolean) {
   const { data, error, isLoading } = useSWR(
     slug ? `${API_URL}/genre?slug=${slug}` : `${API_URL}/genre?id=${id}`,

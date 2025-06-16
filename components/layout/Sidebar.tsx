@@ -121,6 +121,10 @@ export default function Sidebar({ className, ...props }: { className?: string; [
             Instansi
           </NavLink>
 
+          <NavLink href='/tahun' icon={<LayoutListIcon className='h-[18px] w-[18px]' />} className='mt-0.5'>
+            Tahun
+          </NavLink>
+
           <NavAccordion
             title='Activity'
             routeName='activity'
