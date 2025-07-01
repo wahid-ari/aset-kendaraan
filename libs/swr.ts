@@ -69,6 +69,16 @@ export function useGenresData() {
   return { data, error, isLoading };
 }
 
+export function useKendaraanData() {
+  const { data, error, isLoading } = useSWR(`${API_URL}/kendaraan`, fetcher, { refreshInterval: 1000 });
+  return { data, error, isLoading };
+}
+
+export function useKendaraanDetailData(id: string) {
+  const { data, error, isLoading } = useSWR(`${API_URL}/kendaraan?id=${id}`, fetcher, { refreshInterval: 1000 });
+  return { data, error, isLoading };
+}
+
 export function useInstansiData() {
   const { data, error, isLoading } = useSWR(`${API_URL}/instansi`, fetcher, { refreshInterval: 1000 });
   return { data, error, isLoading };

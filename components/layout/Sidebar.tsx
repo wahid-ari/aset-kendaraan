@@ -120,6 +120,10 @@ export default function Sidebar({ className, ...props }: { className?: string; [
             Genre
           </NavLink>
 
+          <NavLink href='/kendaraan' icon={<Building2Icon className='h-[18px] w-[18px]' />} className='mt-0.5'>
+            Kendaraan
+          </NavLink>
+
           <NavLink href='/instansi' icon={<Building2Icon className='h-[18px] w-[18px]' />} className='mt-0.5'>
             Instansi
           </NavLink>
