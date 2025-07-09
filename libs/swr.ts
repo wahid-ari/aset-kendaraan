@@ -109,6 +109,16 @@ export function useJenisDetailData(id: string) {
   return { data, error, isLoading };
 }
 
+export function useKondisiData() {
+  const { data, error, isLoading } = useSWR(`${API_URL}/kondisi`, fetcher, { refreshInterval: 1000 });
+  return { data, error, isLoading };
+}
+
+export function useKondisiDetailData(id: string) {
+  const { data, error, isLoading } = useSWR(`${API_URL}/kondisi?id=${id}`, fetcher, { refreshInterval: 1000 });
+  return { data, error, isLoading };
+}
+
 export function useGenreData(id: string, slug?: boolean) {
   const { data, error, isLoading } = useSWR(
     slug ? `${API_URL}/genre?slug=${slug}` : `${API_URL}/genre?id=${id}`,

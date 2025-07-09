@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { getSessionToken, supabase, writeLogs } from '@/libs/supabase';
 
 const schema = z.object({
-  kondisi: z.string().min(1, { message: 'Nama tidak boleh kosong' }),
+  kondisi: z.string().min(1, { message: 'Kondisi tidak boleh kosong' }),
 });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -51,10 +51,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           //   res.status(422).json({ message: error.message });
           //   return;
           // }
-          res.status(200).json({ message: 'Success add jenis' });
+          res.status(200).json({ message: 'Success add kondisi' });
           return;
         } else {
-          res.status(422).json({ message: 'Jenis sudah ada' });
+          res.status(422).json({ message: 'Kondisi sudah ada' });
           return;
         }
         // }
@@ -89,10 +89,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           //   res.status(422).json({ message: error.message });
           //   return;
           // }
-          res.status(201).json({ message: 'Success update jenis' });
+          res.status(201).json({ message: 'Success update kondisi' });
           return;
         } else {
-          res.status(422).json({ message: 'Jenis sudah ada' });
+          res.status(422).json({ message: 'Kondisi sudah ada' });
           return;
         }
       }
@@ -118,7 +118,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         //   res.status(422).json({ message: error.message });
         //   return;
         // }
-        res.status(200).json({ message: 'Success delete jenis' });
+        res.status(200).json({ message: 'Success delete kondisi' });
         return;
       }
       // }

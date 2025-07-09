@@ -48,6 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             id_instansi: body.id_instansi,
             id_jenis: body.id_jenis,
             id_tahun: body.id_tahun,
+            catatan: body.catatan,
           },
         ]);
         if (error) {
@@ -85,6 +86,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             id_instansi: body.id_instansi,
             id_jenis: body.id_jenis,
             id_tahun: body.id_tahun,
+            catatan: body.catatan,
           })
           .eq('id', body.id);
         if (error) {

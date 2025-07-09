@@ -9,6 +9,7 @@ import {
   ContainerIcon,
   ExternalLinkIcon,
   GanttChartSquareIcon,
+  InboxIcon,
   LayersIcon,
   LayoutDashboardIcon,
   LayoutGridIcon,
@@ -122,6 +123,10 @@ export default function Sidebar({ className, ...props }: { className?: string; [
 
           <NavLink href='/kendaraan' icon={<TruckIcon className='h-[18px] w-[18px]' />} className='mt-0.5'>
             Kendaraan
+          </NavLink>
+
+          <NavLink href='/kondisi' icon={<InboxIcon className='h-[18px] w-[18px]' />} className='mt-0.5'>
+            Kondisi
           </NavLink>
 
           <NavLink href='/instansi' icon={<Building2Icon className='h-[18px] w-[18px]' />} className='mt-0.5'>
