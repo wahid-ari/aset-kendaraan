@@ -7,7 +7,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   switch (method) {
     case 'GET':
-      const { data } = await supabase.from('book_logs').select(`*, book_users (username, name, type)`).order('id');
+      const { data } = await supabase.from('aset_logs').select(`*, aset_users (username, name, type)`).order('id');
       res.status(200).json(data);
       break;
 

@@ -1,10 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { compare, hash } from 'bcryptjs';
 import { z } from 'zod';
 
 import { getSessionToken, supabase, writeLogs } from '@/libs/supabase';
 
 const schema = z.object({
-  kondisi: z.string().min(1, { message: 'Nama tidak boleh kosong' }),
+  name: z.string().min(1, { message: 'Name is required' }),
+  username: z.string().min(1, { message: 'Username is required' }),
+  password: z.string().min(1, { message: 'Password is required' }),
 });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -15,11 +18,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   switch (method) {
     case 'GET':
       if (!query.id) {
-        const { data } = await supabase.from('aset_kondisi').select(`*`).order('id');
+        const { data } = await supabase.from('aset_users').select(`id, name, username`).order('id');
         res.status(200).json(data);
         return;
       } else {
-        const { data } = await supabase.from('aset_kondisi').select(`*`).eq('id', query.id).order('id');
+        const { data } = await supabase.from('aset_users').select(`id, name, username`).eq('id', query.id).order('id');
         res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
         res.status(200).json(data);
       }
@@ -34,11 +37,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(422).json({ message: isValid?.error?.issues });
         return;
       } else {
-        const { data } = await supabase.from('aset_kondisi').select(`kondisi`).eq('kondisi', body.kondisi).single();
-        if (data == null) {
-          const { error } = await supabase.from('aset_kondisi').insert([
+        const { data: isUsernameExist } = await supabase
+          .from('aset_users')
+          .select(`username`)
+          .eq('username', body.username)
+          .single();
+        if (isUsernameExist == null) {
+          const passwordHashed = await hash(body.password, 8);
+          const { error } = await supabase.from('aset_users').insert([
             {
-              kondisi: body.kondisi,
+              name: body.name,
+              username: body.username,
+              password: passwordHashed,
+              type: 'admin',
             },
           ]);
           if (error) {
@@ -46,15 +57,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return;
           }
           // Write logs
-          // const errorLogs = await writeLogs(sessionPost.user_id, 'create', 'kondisi');
+          // const errorLogs = await writeLogs(sessionPost.user_id, 'create', 'users');
           // if (errorLogs) {
           //   res.status(422).json({ message: error.message });
           //   return;
           // }
-          res.status(200).json({ message: 'Success add jenis' });
+          res.status(200).json({ message: 'Success add user' });
           return;
         } else {
-          res.status(422).json({ message: 'Jenis sudah ada' });
+          res.status(422).json({ message: 'Username already exist' });
           return;
         }
         // }
@@ -70,12 +81,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(422).json({ message: isValidPut?.error?.issues });
         return;
       } else {
-        const { data } = await supabase.from('aset_kondisi').select(`kondisi`).eq('kondisi', body.kondisi).single();
-        if (data == null) {
+        const { data: isUsernameExist } = await supabase
+          .from('aset_users')
+          .select(`username`)
+          .eq('username', body.username)
+          .single();
+        if (isUsernameExist == null) {
+          const passwordHashed = await hash(body.password, 8);
           const { error } = await supabase
-            .from('aset_kondisi')
+            .from('aset_users')
             .update({
-              kondisi: body.kondisi,
+              name: body.name,
+              username: body.username,
+              password: passwordHashed,
+              type: 'admin',
             })
             .eq('id', body.id);
           if (error) {
@@ -83,15 +102,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return;
           }
           // Write logs
-          // const errorLogs = await writeLogs(sessionPut.user_id, 'update', 'kondisi', body.id);
+          // const errorLogs = await writeLogs(sessionPut.user_id, 'update', 'users', body.id);
           // if (errorLogs) {
           //   res.status(422).json({ message: error.message });
           //   return;
           // }
-          res.status(201).json({ message: 'Success update jenis' });
+          res.status(201).json({ message: 'Success update user' });
           return;
         } else {
-          res.status(422).json({ message: 'Jenis sudah ada' });
+          res.status(422).json({ message: 'Username already exist' });
           return;
         }
       }
@@ -106,18 +125,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(422).json({ message: 'Id required' });
         return;
       } else {
-        const { error } = await supabase.from('aset_kondisi').delete().eq('id', query.id);
+        const { error } = await supabase.from('aset_users').delete().eq('id', query.id);
         if (error) {
           res.status(422).json({ message: error.message, detail: error.details });
           return;
         }
         // Write logs
-        // const errorLogs = await writeLogs(sessionDelete.user_id, 'delete', 'kondisi', query.id);
+        // const errorLogs = await writeLogs(sessionDelete.user_id, 'delete', 'users', query.id);
         // if (errorLogs) {
         //   res.status(422).json({ message: error.message });
         //   return;
         // }
-        res.status(200).json({ message: 'Success delete jenis' });
+        res.status(200).json({ message: 'Success delete user' });
         return;
       }
       // }

@@ -11,7 +11,7 @@ export async function getSessionToken(res: NextApiResponse, header: string, toke
 }
 
 export async function writeLogs(user_id: number, action: string, table: string = '', data_id: string | string[] = '') {
-  const { error } = await supabase.from('book_logs').insert([
+  const { error } = await supabase.from('aset_logs').insert([
     {
       user_id: user_id,
       action: action,
