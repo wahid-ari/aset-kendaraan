@@ -2,7 +2,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { compare, hash } from 'bcryptjs';
 import { z } from 'zod';
 
+
+
 import { getSessionToken, supabase, writeLogs } from '@/libs/supabase';
+
+
+
+
 
 const schema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
@@ -125,18 +131,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(422).json({ message: 'Id required' });
         return;
       } else {
-        const { error } = await supabase.from('aset_users').delete().eq('id', query.id);
-        if (error) {
-          res.status(422).json({ message: error.message, detail: error.details });
+        const { data: adminType } = await supabase.from('aset_users').select(`*`).eq('id', query.id).order('id').single();
+        if (adminType?.type !== 'superadmin') {
+          const { error } = await supabase.from('aset_users').delete().eq('id', query.id);
+          if (error) {
+            res.status(422).json({ message: error.message, detail: error.details });
+            return;
+          }
+          // Write logs
+          // const errorLogs = await writeLogs(sessionDelete.user_id, 'delete', 'users', query.id);
+          // if (errorLogs) {
+          //   res.status(422).json({ message: error.message });
+          //   return;
+          // }
+          res.status(200).json({ message: 'Success delete user' });
           return;
         }
-        // Write logs
-        // const errorLogs = await writeLogs(sessionDelete.user_id, 'delete', 'users', query.id);
-        // if (errorLogs) {
-        //   res.status(422).json({ message: error.message });
-        //   return;
-        // }
-        res.status(200).json({ message: 'Success delete user' });
+        res.status(422).json({ message: 'You cant delete superadmin' });
         return;
       }
       // }
