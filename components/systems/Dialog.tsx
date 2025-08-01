@@ -74,6 +74,7 @@ export default function Dialog({
             )}
           >
             <DialogRadix.Close
+              onClick={onClose}
               className={
                 'absolute right-3.5 top-3.5 rounded p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500'
               }

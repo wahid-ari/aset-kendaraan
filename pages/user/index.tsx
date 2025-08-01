@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import Link from 'next/link';
 import axios from 'axios';
 import { PlusIcon } from 'lucide-react';
 import { mutate } from 'swr';
 import { useDebounce } from 'use-debounce';
 
-import { useKondisiData, useUserData } from '@/libs/swr';
+import { useUserData } from '@/libs/swr';
 import useToast from '@/hooks/use-hot-toast';
 
 import Layout from '@/components/layout/Layout';
@@ -30,7 +29,7 @@ export default function User() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [editItem, setEditItem] = useState({ id: null, nama: '' });
+  const [editItem, setEditItem] = useState({ id: null, name: '', username: '', password: '', confirmPassword: '' });
   const [deleteItem, setDeleteItem] = useState({ id: null, nama: '' });
   const [search, setSearch] = useState('');
   const [searchDebounce] = useDebounce(search, 300);
@@ -43,58 +42,73 @@ export default function User() {
         );
 
   async function handleCreate() {
-    const toastId = pushToast({
-      message: `Menyimpan ${nama}`,
-      isLoading: true,
-    });
-    try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/users`, { nama: nama });
-      if (res.status == 200) {
-        setOpenCreateDialog(false);
-        setNama('');
-        updateToast({ toastId, message: res?.data?.message, isError: false });
-        mutate(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/users`);
-      }
-    } catch (error) {
-      console.error(error);
-      if (Array.isArray(error?.response?.data?.message)) {
-        const errors = [...error?.response?.data?.message].reverse();
-        // show all error
-        dismissToast();
-        errors.forEach((item: any) => {
-          pushToast({ message: item?.message, isError: true });
+    if (password == confirmPassword) {
+      const toastId = pushToast({
+        message: `Menyimpan ${nama}`,
+        isLoading: true,
+      });
+      try {
+        const res = await axios.post(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/users`, {
+          name: nama,
+          username: username,
+          password: password,
         });
-      } else {
-        updateToast({ toastId, message: error?.response?.data?.message, isError: true });
+        if (res.status == 200) {
+          setOpenCreateDialog(false);
+          setNama('');
+          setUsername('');
+          setPassword('');
+          setConfirmPassword('');
+          updateToast({ toastId, message: res?.data?.message, isError: false });
+          mutate(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/users`);
+        }
+      } catch (error) {
+        console.error(error);
+        if (Array.isArray(error?.response?.data?.message)) {
+          const errors = [...error?.response?.data?.message].reverse();
+          // show all error
+          dismissToast();
+          errors.forEach((item: any) => {
+            pushToast({ message: item?.message, isError: true });
+          });
+        } else {
+          updateToast({ toastId, message: error?.response?.data?.message, isError: true });
+        }
       }
+    } else {
+      pushToast({ message: 'Password not match', isError: true });
     }
   }
 
   async function handleEdit() {
-    const toastId = pushToast({
-      message: 'Memperbarui User',
-      isLoading: true,
-    });
-    try {
-      const res = await axios.put(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/users`, editItem);
-      if (res.status == 201) {
-        setOpenEditDialog(false);
-        setEditItem({ id: null, nama: '' });
-        updateToast({ toastId, message: res?.data?.message, isError: false });
-        mutate(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/users`);
+    if (editItem.password == editItem.confirmPassword) {
+      const toastId = pushToast({
+        message: 'Memperbarui User',
+        isLoading: true,
+      });
+      try {
+        const res = await axios.put(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/users`, editItem);
+        if (res.status == 201) {
+          setOpenEditDialog(false);
+          setEditItem({ id: null, name: '', username: '', password: '', confirmPassword: '' });
+          updateToast({ toastId, message: res?.data?.message, isError: false });
+          mutate(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/users`);
+        }
+      } catch (error) {
+        console.error(error);
+        if (Array.isArray(error?.response?.data?.message)) {
+          const errors = [...error?.response?.data?.message].reverse();
+          // show all error
+          dismissToast();
+          errors.forEach((item: any) => {
+            pushToast({ message: item?.message, isError: true });
+          });
+        } else {
+          updateToast({ toastId, message: error?.response?.data?.message, isError: true });
+        }
       }
-    } catch (error) {
-      console.error(error);
-      if (Array.isArray(error?.response?.data?.message)) {
-        const errors = [...error?.response?.data?.message].reverse();
-        // show all error
-        dismissToast();
-        errors.forEach((item: any) => {
-          pushToast({ message: item?.message, isError: true });
-        });
-      } else {
-        updateToast({ toastId, message: error?.response?.data?.message, isError: true });
-      }
+    } else {
+      pushToast({ message: 'Password not match', isError: true });
     }
   }
 
@@ -122,8 +136,8 @@ export default function User() {
     }
   }
 
-  function handleShowEditModal(id: any, nama: any) {
-    setEditItem({ id: id, nama: nama });
+  function handleShowEditModal(id: any, nama: any, username: any) {
+    setEditItem({ id: id, name: nama, username: username, password: '', confirmPassword: '' });
     setOpenEditDialog(true);
   }
 
@@ -160,6 +174,9 @@ export default function User() {
         onClose={() => {
           setOpenCreateDialog(false);
           setNama('');
+          setUsername('');
+          setPassword('');
+          setConfirmPassword('');
         }}
         onConfirm={handleCreate}
         confirmText='Simpan'
@@ -167,7 +184,7 @@ export default function User() {
       >
         <div className='mt-5'>
           <LabeledInput
-            label='User'
+            label='Nama'
             type='text'
             name='nama'
             value={nama}
@@ -219,11 +236,40 @@ export default function User() {
       >
         <div className='mt-5'>
           <LabeledInput
-            label='User'
+            label='Nama'
             type='text'
             name='nama'
-            value={editItem.nama}
-            onChange={(e) => setEditItem({ ...editItem, nama: e.target.value })}
+            value={editItem.name}
+            onChange={(e) => setEditItem({ ...editItem, name: e.target.value })}
+          />
+        </div>
+        <div className='mt-5'>
+          <LabeledInput
+            label='Username'
+            type='text'
+            name='username'
+            value={editItem.username}
+            onChange={(e) => setEditItem({ ...editItem, username: e.target.value })}
+          />
+        </div>
+        <div className='mt-5'>
+          <LabeledInput
+            label='Password'
+            name='password'
+            placeholder='Password'
+            type='password'
+            value={editItem.password}
+            onChange={(e) => setEditItem({ ...editItem, password: e.target.value })}
+          />
+        </div>
+        <div className='mt-5'>
+          <LabeledInput
+            label='Confirm Password'
+            name='confirmPassword'
+            placeholder='Confirm Password'
+            type='password'
+            value={editItem.confirmPassword}
+            onChange={(e) => setEditItem({ ...editItem, confirmPassword: e.target.value })}
           />
         </div>
       </Dialog>
@@ -259,12 +305,15 @@ export default function User() {
                 <TableSimple.td>{item.name}</TableSimple.td>
                 <TableSimple.td>{item.username}</TableSimple.td>
                 <TableSimple.td>
-                  <Button className='mr-2 !px-[6px] !py-[2px]' onClick={() => handleShowEditModal(item.id, item.nama)}>
+                  <Button
+                    className='mr-2 !px-[6px] !py-[2px]'
+                    onClick={() => handleShowEditModal(item.id, item.name, item.username)}
+                  >
                     Edit
                   </Button>
                   <Button.danger
                     className='!px-[6px] !py-[2px]'
-                    onClick={() => handleShowDeleteModal(item.id, item.nama)}
+                    onClick={() => handleShowDeleteModal(item.id, item.name)}
                   >
                     Hapus
                   </Button.danger>
