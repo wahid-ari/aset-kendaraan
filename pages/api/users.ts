@@ -2,13 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { compare, hash } from 'bcryptjs';
 import { z } from 'zod';
 
-
-
 import { getSessionToken, supabase, writeLogs } from '@/libs/supabase';
-
-
-
-
 
 const schema = z.object({
   name: z.string().min(1, { message: 'Name is required' }),
@@ -131,7 +125,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(422).json({ message: 'Id required' });
         return;
       } else {
-        const { data: adminType } = await supabase.from('aset_users').select(`*`).eq('id', query.id).order('id').single();
+        const { data: adminType } = await supabase
+          .from('aset_users')
+          .select(`*`)
+          .eq('id', query.id)
+          .order('id')
+          .single();
         if (adminType?.type !== 'superadmin') {
           const { error } = await supabase.from('aset_users').delete().eq('id', query.id);
           if (error) {

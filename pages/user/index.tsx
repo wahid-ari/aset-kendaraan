@@ -18,15 +18,18 @@ import Shimmer from '@/components/systems/Shimmer';
 import TableSimple from '@/components/systems/TableSimple';
 import Title from '@/components/systems/Title';
 
-// Kondisi.auth = true;
+// User.auth = true;
 // This page secured through the middleware in root folder
-export default function Kondisi() {
+export default function User() {
   const { data, error } = useUserData();
   const { updateToast, pushToast, dismissToast } = useToast();
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [nama, setNama] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [editItem, setEditItem] = useState({ id: null, nama: '' });
   const [deleteItem, setDeleteItem] = useState({ id: null, nama: '' });
   const [search, setSearch] = useState('');
@@ -45,12 +48,12 @@ export default function Kondisi() {
       isLoading: true,
     });
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/jenis`, { nama: nama });
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/users`, { nama: nama });
       if (res.status == 200) {
         setOpenCreateDialog(false);
         setNama('');
         updateToast({ toastId, message: res?.data?.message, isError: false });
-        mutate(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/jenis`);
+        mutate(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/users`);
       }
     } catch (error) {
       console.error(error);
@@ -69,16 +72,16 @@ export default function Kondisi() {
 
   async function handleEdit() {
     const toastId = pushToast({
-      message: 'Memperbarui Kondisi',
+      message: 'Memperbarui User',
       isLoading: true,
     });
     try {
-      const res = await axios.put(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/jenis`, editItem);
+      const res = await axios.put(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/users`, editItem);
       if (res.status == 201) {
         setOpenEditDialog(false);
         setEditItem({ id: null, nama: '' });
         updateToast({ toastId, message: res?.data?.message, isError: false });
-        mutate(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/jenis`);
+        mutate(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/users`);
       }
     } catch (error) {
       console.error(error);
@@ -101,12 +104,12 @@ export default function Kondisi() {
       isLoading: true,
     });
     try {
-      const res = await axios.delete(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/jenis?id=${deleteItem.id}`);
+      const res = await axios.delete(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/users?id=${deleteItem.id}`);
       if (res.status == 200) {
         setOpenDeleteDialog(false);
         setDeleteItem({ id: null, nama: '' });
         updateToast({ toastId, message: res?.data?.message, isError: false });
-        mutate(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/jenis`);
+        mutate(`${process.env.NEXT_PUBLIC_API_ROUTE}/api/users`);
       }
     } catch (error) {
       console.error(error);
@@ -131,27 +134,27 @@ export default function Kondisi() {
 
   if (error) {
     return (
-      <Layout title='Kondisi - BPKAD'>
+      <Layout title='User - BPKAD'>
         <div className='flex h-[36rem] items-center justify-center text-base'>Failed to load</div>
       </Layout>
     );
   }
 
   return (
-    <Layout title='Kondisi - BPKAD' prefetch={['/api/jenis']} description='View and Manage Kondisi - BPKAD'>
+    <Layout title='User - BPKAD' prefetch={['/api/users']} description='View and Manage User - BPKAD'>
       <div className='mb-4 flex flex-wrap items-center justify-between gap-y-3'>
-        <Title>Kondisi</Title>
+        <Title>User</Title>
         <Button.success onClick={() => setOpenCreateDialog(true)} className='flex items-center gap-2'>
           <PlusIcon className='h-4 w-4' />
-          Tambah Kondisi
+          Tambah User
         </Button.success>
       </div>
 
-      <Label>Cari Kondisi</Label>
+      <Label>Cari User</Label>
       <Input name='search' placeholder='Mobil' onChange={(e) => setSearch(e.target.value)} />
 
       <Dialog
-        title='Tambah Kondisi'
+        title='Tambah User'
         open={openCreateDialog}
         setOpen={setOpenCreateDialog}
         onClose={() => {
@@ -164,18 +167,48 @@ export default function Kondisi() {
       >
         <div className='mt-5'>
           <LabeledInput
-            label='Kondisi'
+            label='User'
             type='text'
             name='nama'
             value={nama}
             onChange={(e) => setNama(e.target.value)}
-            placeholder='Motor'
+            placeholder='Nama'
+          />
+        </div>
+        <div className='mt-5'>
+          <LabeledInput
+            label='Username'
+            type='text'
+            name='username'
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder='Username'
+          />
+        </div>
+        <div className='mt-5'>
+          <LabeledInput
+            label='Password'
+            name='password'
+            placeholder='Password'
+            type='password'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <div className='mt-5'>
+          <LabeledInput
+            label='Confirm Password'
+            name='confirmPassword'
+            placeholder='Confirm Password'
+            type='password'
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </div>
       </Dialog>
 
       <Dialog
-        title='Edit Kondisi'
+        title='Edit User'
         open={openEditDialog}
         setOpen={setOpenEditDialog}
         onClose={() => setOpenEditDialog(false)}
@@ -186,7 +219,7 @@ export default function Kondisi() {
       >
         <div className='mt-5'>
           <LabeledInput
-            label='Kondisi'
+            label='User'
             type='text'
             name='nama'
             value={editItem.nama}
@@ -196,7 +229,7 @@ export default function Kondisi() {
       </Dialog>
 
       <Dialog
-        title='Hapus Kondisi'
+        title='Hapus User'
         open={openDeleteDialog}
         isDanger
         setOpen={setOpenDeleteDialog}
@@ -213,7 +246,8 @@ export default function Kondisi() {
           head={
             <>
               <TableSimple.td shrink>No</TableSimple.td>
-              <TableSimple.td>Kondisi</TableSimple.td>
+              <TableSimple.td>Name</TableSimple.td>
+              <TableSimple.td>Username</TableSimple.td>
               <TableSimple.td shrink>Aksi</TableSimple.td>
             </>
           }
@@ -222,14 +256,8 @@ export default function Kondisi() {
             return (
               <TableSimple.tr key={index}>
                 <TableSimple.td shrink>{index + 1}</TableSimple.td>
-                <TableSimple.td>
-                  <Link
-                    href={`jenis/detail/${item.id}`}
-                    className='rounded text-sm font-medium transition-all duration-200 hover:text-sky-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500'
-                  >
-                    {item.nama}
-                  </Link>
-                </TableSimple.td>
+                <TableSimple.td>{item.name}</TableSimple.td>
+                <TableSimple.td>{item.username}</TableSimple.td>
                 <TableSimple.td>
                   <Button className='mr-2 !px-[6px] !py-[2px]' onClick={() => handleShowEditModal(item.id, item.nama)}>
                     Edit
@@ -250,7 +278,7 @@ export default function Kondisi() {
           head={
             <>
               <TableSimple.th shrink>No</TableSimple.th>
-              <TableSimple.th className='text-left'>Kondisi</TableSimple.th>
+              <TableSimple.th className='text-left'>User</TableSimple.th>
               <TableSimple.th className='w-32'>Aksi</TableSimple.th>
             </>
           }

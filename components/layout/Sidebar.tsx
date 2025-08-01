@@ -141,7 +141,7 @@ export default function Sidebar({ className, ...props }: { className?: string; [
             Jenis
           </NavLink>
 
-          <NavLink href='/user' icon={<LayoutListIcon className='h-[18px] w-[18px]' />} className='mt-0.5'>
+          <NavLink href='/user' icon={<UsersIcon className='h-[18px] w-[18px]' />} className='mt-0.5'>
             User
           </NavLink>
 
